@@ -5,7 +5,6 @@ body {
 ol,
 ul {
   padding-left: 30px;
-  
 }
 .board-row:after {
   clear: both;
@@ -45,4 +44,6 @@ ul {
 .game-info {
   margin-left: 20px;
 }
-
+.sort{
+  float: right;
+}

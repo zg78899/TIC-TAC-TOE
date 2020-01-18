@@ -12,6 +12,7 @@ class Board extends Component {
       />
     );
   }
+
   render() {
     return (
       <div>

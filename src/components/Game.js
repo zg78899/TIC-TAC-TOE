@@ -11,9 +11,18 @@ class Game extends Component {
         }
       ],
       stepNumber: 0,
-      xIsNext: true
+      xIsNext: true,
+      isAscending: true
     };
   }
+
+  /**토글 함수 */
+  handleSortToggle() {
+    this.setState({
+      isAscending: !this.state.isAscending
+    });
+  }
+  /**클릭했을때 함수 */
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
@@ -36,22 +45,28 @@ class Game extends Component {
       xIsNext: !this.state.xIsNext
     });
   }
+
+  /**과거 이동 함수 */
   jumpTo(step) {
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0
     });
   }
+  /** 렌더링 */
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winInfo = calculateWinner(current.squares);
     const winner = winInfo.winner;
+
     console.log(winner);
     console.log(winInfo);
     console.log(winInfo.isDraw);
     console.log(current);
     console.log(history);
+
+    /** 과거로 돌아가는 버튼*/
 
     let moves = history.map((step, move) => {
       const desc = move ? 'Go to move #' + move : 'Go to game start';
@@ -61,6 +76,14 @@ class Game extends Component {
         </li>
       );
     });
+
+    /**오름차순 내림차순 순서 정리 */
+    const isAscending = this.state.isAscending;
+    if (!isAscending) {
+      moves.reverse();
+    }
+
+    /** 상태를 나타냄 */
     let status;
     if (winner) {
       status = 'Winner :' + winner;
@@ -84,6 +107,9 @@ class Game extends Component {
         <div className="game-info">
           <div>{status}</div>
           <ol>{moves}</ol>
+          <button className="sort" onClick={() => this.handleSortToggle()}>
+            {isAscending ? 'descending' : 'ascending'}
+          </button>
         </div>
       </div>
     );
@@ -91,6 +117,7 @@ class Game extends Component {
 }
 export default Game;
 
+/**승자결정 함수 */
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -102,7 +129,6 @@ function calculateWinner(squares) {
     [0, 4, 8],
     [2, 4, 6]
   ];
-
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
